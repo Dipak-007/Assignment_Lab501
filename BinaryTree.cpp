@@ -73,6 +73,59 @@ void levelOrder(TreeNode *root){
     }
 }
 
+/*
+    Zig-Zag Traversal
+            1
+          /   \
+         2     4
+        / \     \
+       3   5     7
+          / \     \
+         6   8     9
+                  / \
+                 10  11
+
+    Output
+    1
+    4 2
+    3 5 7
+    9 8 6
+    10 11
+*/
+
+//function for Zig-Zag Traversal
+void zigZagLevelOrder(TreeNode* root){
+    if(root){
+        vector<int> ans;
+        queue<TreeNode*> q;
+        bool left=true;
+        q.push(root);
+        q.push(nullptr);
+        while(!q.empty()){
+            TreeNode* temp=q.front();
+            q.pop();
+            if(!temp){
+                if(!left){
+                    for(int i=ans.size()-1;i>=0;i--)     cout<<ans[i]<<" ";
+                    left=true;
+                }
+                else{
+                    for(int i:ans)  cout<<i<<" ";
+                    left=false;
+                }
+                cout<<"\n";
+                ans.clear();
+                if(!q.empty())  q.push(nullptr);
+            }
+            else{
+                ans.emplace_back(temp->val);
+                if(temp->left)  q.push(temp->left);
+                if(temp->right)  q.push(temp->right);
+            }
+        }
+    }
+}
+
 int main(){
     TreeNode *root=createTree();
     int opt;
@@ -83,6 +136,7 @@ int main(){
         cout<<"2. Preorder Traversal\n";
         cout<<"3. Postorder Traversal\n";
         cout<<"4. Level Order Traversal\n";
+        cout<<"5. Zig-Zag Traversal\n";
         cout<<"\nPress any other number to quit...";
         cin>>opt;
 
@@ -98,6 +152,9 @@ int main(){
                     break;
             case 4: cout<<"\nLevel Order Traversal -->\n";
                     levelOrder(root);
+                    break;
+            case 5: cout<<"\nZigZag Traversal -->\n";
+                    zigZagLevelOrder(root);
                     break;
             default:cout<<"\nQuitting...";
                     flag=false;
