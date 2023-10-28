@@ -126,6 +126,65 @@ void zigZagLevelOrder(TreeNode* root){
     }
 }
 
+/*
+    Boundary Traversal
+            1
+          /   \
+         2     4
+        / \     \
+       3   5     7
+          / \     \
+         6   8     9
+                  / \
+                 10  11
+
+    Output
+    1 2 3 6 8 10 11 9 7 4
+*/
+
+//sub functions for boundary traversals
+void traverseLeft(TreeNode* root,vector<int> &ans){
+    if(root){
+        if(!root->left && !root->right) return;
+        ans.emplace_back(root->val);
+        if(root->left) traverseLeft(root->left,ans);
+        else traverseLeft(root->right,ans);
+    }
+}
+
+void traverseLeaves(TreeNode* root,vector<int> &ans){
+    if(root){
+        if(!root->left && !root->right){
+            ans.emplace_back(root->val);
+            return;
+        }
+        traverseLeaves(root->left,ans);
+        traverseLeaves(root->right,ans);
+    }
+}
+
+void traverseRight(TreeNode* root,vector<int> &ans){
+    if(root){
+        if(!root->left && !root->right) return;
+        if(root->right) traverseRight(root->right,ans);
+        else traverseRight(root->left,ans);
+        ans.emplace_back(root->val);
+    }
+}
+
+//function for boundary traversal
+void BoundaryOrder(TreeNode* root){
+    if(root){
+        vector<int> ans;
+        ans.emplace_back(root->val);
+        traverseLeft(root->left,ans);
+        traverseLeaves(root->left,ans);
+        traverseLeaves(root->right,ans);
+        traverseRight(root->right,ans);
+        for(int i:ans)  cout<<i<<" ";
+    }
+}
+
 int main(){
     TreeNode *root=createTree();
     int opt;
@@ -137,6 +196,7 @@ int main(){
         cout<<"3. Postorder Traversal\n";
         cout<<"4. Level Order Traversal\n";
         cout<<"5. Zig-Zag Traversal\n";
+        cout<<"6. Boundary Traversal\n";
         cout<<"\nPress any other number to quit...";
         cin>>opt;
 
@@ -155,6 +215,9 @@ int main(){
                     break;
             case 5: cout<<"\nZigZag Traversal -->\n";
                     zigZagLevelOrder(root);
+                    break;
+            case 6: cout<<"\nBoundary Traversal -->\n";
+                    BoundaryOrder(root);
                     break;
             default:cout<<"\nQuitting...";
                     flag=false;
