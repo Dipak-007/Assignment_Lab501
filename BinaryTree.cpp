@@ -185,6 +185,48 @@ void BoundaryOrder(TreeNode* root){
     }
 }
 
+/*
+    Diagonal Traversal
+            1
+          /   \
+         2     3
+        / \   / \
+       4   5  6  7
+      / \    /    \
+     8   9  10    11
+
+
+    Output              key
+    1 3 7 11             0
+    2 5 6                1
+    4 9 10               2
+    8                    3
+
+    Approach
+    A key is given to each node such that
+        - Left node key = 1 + root node key
+        - Right node key = root node key
+*/
+
+void solve(TreeNode* root,int key,map<int,vector<int>> &ans){
+    if(root){
+        ans[key].emplace_back(root->val);
+        solve(root->left,key+1,ans);
+        solve(root->right,key,ans);
+    }
+}
+
+//function for diagonal traversal
+void diagonalTraversal(TreeNode *root) {
+    map<int,vector<int>> ans;
+    solve(root,0,ans);
+    for(auto i:ans){
+        for(int j=0;j<i.second.size();j++)
+            cout<<i.second[j]<<" ";
+        cout<<"\n";
+    }
+}
+
 int main(){
     TreeNode *root=createTree();
     int opt;
@@ -197,6 +239,7 @@ int main(){
         cout<<"4. Level Order Traversal\n";
         cout<<"5. Zig-Zag Traversal\n";
         cout<<"6. Boundary Traversal\n";
+        cout<<"7. Diagonal Traversal\n";
         cout<<"\nPress any other number to quit...";
         cin>>opt;
 
@@ -218,6 +261,9 @@ int main(){
                     break;
             case 6: cout<<"\nBoundary Traversal -->\n";
                     BoundaryOrder(root);
+                    break;
+            case 7: cout<<"\nDiagonal Traversal -->\n";
+                    diagonalTraversal(root);
                     break;
             default:cout<<"\nQuitting...";
                     flag=false;
