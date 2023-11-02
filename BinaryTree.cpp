@@ -227,6 +227,57 @@ void diagonalTraversal(TreeNode *root) {
     }
 }
 
+/*
+    vertical traversal
+            1
+          /   \
+         2     3
+        / \   / \
+       4   5  6  7
+      / \    /    \
+     8   9  10    11
+
+
+    Output          Horizontalal Distance from root
+    8                           -3
+    4                           -2
+    2 9 10                      -1
+    1 5 6                        0
+    3                            1
+    7                            2
+    11                           3
+*/
+
+void getKey(TreeNode* root,int key,unordered_map<TreeNode*,int> &horiDist){
+    if(root){
+        horiDist[root]=key;
+        getKey(root->left,key-1,horiDist);
+        getKey(root->right,key+1,horiDist);
+    }
+}
+
+// function for vertical order traversal
+void verticalOrder(TreeNode *root){
+    unordered_map<TreeNode*,int> horiDist;
+    getKey(root,0,horiDist);
+    map<int,vector<int>> m;
+    queue<TreeNode*> q;
+    q.push(root);
+    while(!q.empty()){
+        TreeNode* temp=q.front();
+        q.pop();
+        m[horiDist[temp]].emplace_back(temp->val);
+        if(temp->left)  q.push(temp->left);
+        if(temp->right)  q.push(temp->right);
+    }
+
+    for(auto i:m){
+        for(auto j:i.second)
+            cout<<j<<" ";
+        cout<<"\n";
+    }
+}
+
 int main(){
     TreeNode *root=createTree();
     int opt;
@@ -240,6 +291,7 @@ int main(){
         cout<<"5. Zig-Zag Traversal\n";
         cout<<"6. Boundary Traversal\n";
         cout<<"7. Diagonal Traversal\n";
+        cout<<"8. Vertical Traversal\n";
         cout<<"\nPress any other number to quit...";
         cin>>opt;
 
@@ -264,6 +316,9 @@ int main(){
                     break;
             case 7: cout<<"\nDiagonal Traversal -->\n";
                     diagonalTraversal(root);
+                    break;
+            case 8: cout<<"\nVertical Traversal -->\n";
+                    verticalOrder(root);
                     break;
             default:cout<<"\nQuitting...";
                     flag=false;
